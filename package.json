@@ -1,6 +1,6 @@
 {
   "name": "redux-batched-actions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "redux higher order reducer + action creator to reduce actions under a single subscriber notification",
   "main": "lib/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tshelburne/redux-batching-reducer"
+    "url": "https://github.com/tshelburne/redux-batched-actions"
   },
   "keywords": [
     "redux",
@@ -26,9 +26,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tshelburne/redux-batching-reducer/issues"
+    "url": "https://github.com/tshelburne/redux-batched-actions/issues"
   },
-  "homepage": "https://github.com/tshelburne/redux-batching-reducer",
+  "homepage": "https://github.com/tshelburne/redux-batched-actions",
   "devDependencies": {
     "babel": "^5.8.23",
     "chai": "^3.3.0",

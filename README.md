@@ -4,14 +4,14 @@ redux-batched-actions
 Batching action creator and associated higher order reducer for [redux](https://github.com/gaearon/redux) that enables batching subscriber notifications for an array of actions.
 
 ```js
-npm install --save redux-batching-reducer
+npm install --save redux-batched-actions
 ```
 
 ## Usage
 
 ```js
 import {createStore} from 'redux';
-import {batchActions, enableBatching} from 'redux-batching-reducer';
+import {batchActions, enableBatching} from 'redux-batched-actions';
 import {createAction} from 'redux-actions';
 
 const doThing = createAction('DO_THING')
