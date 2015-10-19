@@ -1,0 +1,39 @@
+{
+  "name": "redux-batched-actions",
+  "version": "0.1.0",
+  "description": "redux higher order reducer + action creator to reduce actions under a single subscriber notification",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha --compilers js:babel/register",
+    "clean": "rm -rf lib",
+    "build": "node_modules/.bin/babel src --out-dir lib",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tshelburne/redux-batching-reducer"
+  },
+  "keywords": [
+    "redux",
+    "react",
+    "reactjs",
+    "batched",
+    "action"
+  ],
+  "author": {
+    "name": "Tim Shelburne",
+    "email": "shelburt02@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tshelburne/redux-batching-reducer/issues"
+  },
+  "homepage": "https://github.com/tshelburne/redux-batching-reducer",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.1",
+    "sinon-chai": "^2.8.0"
+  }
+}
