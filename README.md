@@ -1,6 +1,8 @@
 redux-batched-actions
 =====================
 
+[![Build Status](https://travis-ci.org/tshelburne/redux-batched-actions.svg)](https://travis-ci.org/tshelburne/redux-batched-actions)
+
 Batching action creator and associated higher order reducer for [redux](https://github.com/gaearon/redux) that enables batching subscriber notifications for an array of actions.
 
 ```js
