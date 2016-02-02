@@ -1,4 +1,4 @@
-const BATCH = 'BATCHING_REDUCER.BATCH';
+export const BATCH = 'BATCHING_REDUCER.BATCH';
 
 export function batchActions(actions) {
 	return {type: BATCH, payload: actions}
