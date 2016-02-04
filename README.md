@@ -37,7 +37,7 @@ const unsetLoading = createAction('UNSET_LOADING')
 
 function login(credentials) {
 	return function(dispatch) {
-		dispatch(loggingIn());
+		dispatch(setLoading());
 
 		authenticate(credentials)
 			.then(user => {
