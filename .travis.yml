@@ -1,5 +1,13 @@
 language: node_js
-node_js:
-  - "6"
-  - "5"
-  - "4"
+matrix:
+  include:
+    - node_js: "4"
+    - node_js: "5"
+    - node_js: "6"
+sudo: required
+dist: trusty
+cache:
+   directories:
+     - node_modules
+script:
+  - npm test
