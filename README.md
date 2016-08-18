@@ -19,7 +19,7 @@ import {createAction} from 'redux-actions';
 const doThing = createAction('DO_THING')
 const doOther = createAction('DO_OTHER')
 
-const store = createStore(enableBatching(reducer), intialState)
+const store = createStore(enableBatching(reducer), initialState)
 
 store.dispatch(batchActions([doThing(), doOther()]))
 ```
