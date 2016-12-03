@@ -19,6 +19,14 @@ import {createAction} from 'redux-actions';
 const doThing = createAction('DO_THING')
 const doOther = createAction('DO_OTHER')
 
+function reducer(state, action) {
+	switch (action.type) {
+		case 'DO_THING': return 'thing'
+		case 'DO_OTHER': return 'other'
+		default: return state
+	}
+}
+
 const store = createStore(enableBatching(reducer), initialState)
 
 store.dispatch(batchActions([doThing(), doOther()]))
