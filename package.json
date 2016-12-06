@@ -3,6 +3,7 @@
   "version": "0.1.4",
   "description": "redux higher order reducer + action creator to reduce actions under a single subscriber notification",
   "main": "lib/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "test": "node_modules/.bin/mocha --compilers js:babel-core/register",
     "clean": "rm -rf lib",
