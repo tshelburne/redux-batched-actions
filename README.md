@@ -30,6 +30,8 @@ function reducer(state, action) {
 const store = createStore(enableBatching(reducer), initialState)
 
 store.dispatch(batchActions([doThing(), doOther()]))
+// OR
+store.dispatch(batchActions([doThing(), doOther()], 'DO_BOTH'))
 ```
 
 ## Recipes
@@ -52,7 +54,7 @@ function login(credentials) {
 				dispatch(batchActions([
 					setUser(user),
 					unsetLoading()
-				]))
+				], 'LOGIN_SUCCESS'))
 			})
 		})
 	}
