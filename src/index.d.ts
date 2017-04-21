@@ -8,6 +8,6 @@ export interface BatchAction {
   payload: Redux.Action[];
 }
 
-export declare function batchActions(actions: Redux.Action[]): BatchAction;
+export declare function batchActions(actions: Redux.Action[], type?: string): BatchAction;
 
 export declare function enableBatching<S>(reduce: Redux.Reducer<S>): Redux.Reducer<S>;
