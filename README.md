@@ -36,9 +36,9 @@ const store = createStore(enableBatching(reducer), initialState)
 
 
 // const store = createStore(
-//  enableBatching(reducer),
-//  initialState,
-//  applyMiddleware(batchDispatchMiddleware)
+// 		enableBatching(reducer),
+// 		initialState,
+// 		applyMiddleware(batchDispatchMiddleware)
 // )
 
 

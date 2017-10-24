@@ -14,19 +14,20 @@ export function enableBatching(reduce) {
 }
 
 export function batchDispatchMiddleware(store) {
-  function dispatchChildActions(store, action) {
-    if(action.meta && action.meta.batch) {
-      action.payload.map(function(childAction) {
-        dispatchChildActions(store, childAction)
-      })
-    } else {
-      store.dispatch(action)
-    }
-  }
-  return function(next) {
-    return function(action) {
-      dispatchChildActions(store, action)
-      next(action)
-    }
-  }
+	function dispatchChildActions(store, action) {
+		if(action.meta && action.meta.batch) {
+			action.payload.map(function(childAction) {
+				dispatchChildActions(store, childAction)
+			})
+		} else {
+			store.dispatch(action)
+		}
+	}
+
+	return function(next) {
+		return function(action) {
+			dispatchChildActions(store, action)
+			next(action)
+		}
+	}
 }
