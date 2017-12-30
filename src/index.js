@@ -16,7 +16,7 @@ export function enableBatching(reduce) {
 export function batchDispatchMiddleware(store) {
 	function dispatchChildActions(store, action) {
 		if(action.meta && action.meta.batch) {
-			action.payload.map(function(childAction) {
+			action.payload.forEach(function(childAction) {
 				dispatchChildActions(store, childAction)
 			})
 		} else {
