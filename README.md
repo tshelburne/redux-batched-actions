@@ -30,18 +30,6 @@ function reducer(state, action) {
 // Handle bundled actions in reducer
 const store = createStore(enableBatching(reducer), initialState)
 
-// Alternatively, you can add a middleware to dispatch each of the bundled
-// actions. This can be used if other middlewares are listening for one of the
-// bundled actions to be dispatched
-
-
-// const store = createStore(
-// 		enableBatching(reducer),
-// 		initialState,
-// 		applyMiddleware(batchDispatchMiddleware)
-// )
-
-
 store.dispatch(batchActions([doThing(), doOther()]))
 // OR
 store.dispatch(batchActions([doThing(), doOther()], 'DO_BOTH'))
@@ -76,6 +64,18 @@ function login(credentials) {
 ```
 
 In this example, the subscribers would be notified twice: once when the state is loading, and then again once the user has been loaded.
+
+### Middleware integration
+
+You can add a middleware to dispatch each of the bundled actions. This can be used if other middlewares are listening for one of the bundled actions to be dispatched.
+
+```js
+const store = createStore(
+		enableBatching(reducer),
+		initialState,
+		applyMiddleware(batchDispatchMiddleware)
+)
+```
 
 ## Thanks
 
