@@ -1,4 +1,4 @@
-import {batchActions, enableBatching} from '../src';
+import {batchActions, enableBatching, batchDispatchMiddleware} from '../src';
 import sinon from 'sinon';
 import chai, {expect} from 'chai';
 import sinonChai from 'sinon-chai';
@@ -59,4 +59,34 @@ describe('enabling batching', function() {
 		expect(reducer).to.have.been.calledWithExactly(2, action2)
 	})
 
+})
+
+describe('dispatching middleware', function() {
+	const action1 = {type: 'ACTION_1'}
+	const action2 = {type: 'ACTION_2'}
+	const store = function () { return { dispatch: sinon.spy() } }
+
+	it('dispatches all batched actions', function() {
+		const s = store()
+		const next = sinon.stub()
+		const batchAction = batchActions([action1, action2])
+		batchDispatchMiddleware(s)(next)(batchAction)
+
+		expect(s.dispatch).to.have.been.calledWithExactly(action1)
+		expect(s.dispatch).to.have.been.calledWithExactly(action2)
+	})
+
+	it('handles nested batched actions', function() {
+		const batchedAction = batchActions([
+		  batchActions([action1, action2]),
+		  action2
+		])
+		const s = store()
+		const next = sinon.stub()
+		batchDispatchMiddleware(s)(next)(batchedAction)
+
+		expect(s.dispatch).to.have.been.calledThrice
+		expect(s.dispatch).to.have.been.calledWithExactly(action1)
+		expect(s.dispatch).to.have.been.calledWithExactly(action2)
+	})
 })
