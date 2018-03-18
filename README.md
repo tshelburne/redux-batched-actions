@@ -71,11 +71,13 @@ You can add a middleware to dispatch each of the bundled actions. This can be us
 
 ```js
 const store = createStore(
-		enableBatching(reducer),
+		reducer,
 		initialState,
 		applyMiddleware(batchDispatchMiddleware)
 )
 ```
+
+Note that batchDispatchMiddleware and enableBatching should not be used together as batchDispatchMiddleware calls next on the action it receives, whilst also dispatching each of the bundled actions.
 
 ## Thanks
 
