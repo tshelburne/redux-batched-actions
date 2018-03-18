@@ -27,8 +27,8 @@ export function batchDispatchMiddleware(store) {
 	return function(next) {
 		return function(action) {
 			if (action && action.meta && action.meta.batch) {
-                dispatchChildActions(store, action)
-            }
+				dispatchChildActions(store, action)
+			}
 			next(action)
 		}
 	}

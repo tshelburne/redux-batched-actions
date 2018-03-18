@@ -67,24 +67,24 @@ describe('dispatching middleware', function() {
 	const store = function () { return { dispatch: sinon.spy() } }
 
 	it('dispatches all batched actions', function() {
-        const s = store()
-        const next = sinon.stub()
-        const batchAction = batchActions([action1, action2])
-        batchDispatchMiddleware(s)(next)(batchAction)
+		const s = store()
+		const next = sinon.stub()
+		const batchAction = batchActions([action1, action2])
+		batchDispatchMiddleware(s)(next)(batchAction)
 
-        expect(s.dispatch).to.have.been.calledWithExactly(action1)
-        expect(s.dispatch).to.have.been.calledWithExactly(action2)
-    })
+		expect(s.dispatch).to.have.been.calledWithExactly(action1)
+		expect(s.dispatch).to.have.been.calledWithExactly(action2)
+	})
 
-    it('calls next only once, on the batchedAction', function() {
-        const s = store()
-        const next = sinon.spy()
-        const batchAction = batchActions([action1, action2])
-        batchDispatchMiddleware(s)(next)(batchAction)
+	it('calls next only once, on the batchedAction', function() {
+		const s = store()
+		const next = sinon.spy()
+		const batchAction = batchActions([action1, action2])
+		batchDispatchMiddleware(s)(next)(batchAction)
 
-        expect(next).to.have.been.calledWithExactly(batchAction)
-        expect(next).to.have.callCount(1)
-    })
+		expect(next).to.have.been.calledWithExactly(batchAction)
+		expect(next).to.have.callCount(1)
+	})
 
 	it('handles nested batched actions', function() {
 		const batchedAction = batchActions([
@@ -101,11 +101,11 @@ describe('dispatching middleware', function() {
 	})
 
 	it('calls next but not dispatch for non-batched actions', function() {
-        const s = store()
-        const next = sinon.spy()
-        batchDispatchMiddleware(s)(next)(action1)
+		const s = store()
+		const next = sinon.spy()
+		batchDispatchMiddleware(s)(next)(action1)
 
 		expect(next).to.have.been.calledWithExactly(action1)
-        expect(s.dispatch).to.not.have.been.called
-    })
+		expect(s.dispatch).to.not.have.been.called
+	})
 })
