@@ -29,7 +29,7 @@ export function batchDispatchMiddleware(store) {
 			if (action && action.meta && action.meta.batch) {
 				dispatchChildActions(store, action)
 			}
-			next(action)
+			return next(action)
 		}
 	}
 }
