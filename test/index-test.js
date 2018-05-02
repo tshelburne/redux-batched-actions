@@ -76,6 +76,16 @@ describe('dispatching middleware', function() {
 		expect(s.dispatch).to.have.been.calledWithExactly(action2)
 	})
 
+	it('calls next only once, on the batchedAction', function() {
+		const s = store()
+		const next = sinon.spy()
+		const batchAction = batchActions([action1, action2])
+		batchDispatchMiddleware(s)(next)(batchAction)
+
+		expect(next).to.have.been.calledWithExactly(batchAction)
+		expect(next).to.have.callCount(1)
+	})
+
 	it('handles nested batched actions', function() {
 		const batchedAction = batchActions([
 		  batchActions([action1, action2]),
@@ -88,5 +98,14 @@ describe('dispatching middleware', function() {
 		expect(s.dispatch).to.have.been.calledThrice
 		expect(s.dispatch).to.have.been.calledWithExactly(action1)
 		expect(s.dispatch).to.have.been.calledWithExactly(action2)
+	})
+
+	it('calls next but not dispatch for non-batched actions', function() {
+		const s = store()
+		const next = sinon.spy()
+		batchDispatchMiddleware(s)(next)(action1)
+
+		expect(next).to.have.been.calledWithExactly(action1)
+		expect(s.dispatch).to.not.have.been.called
 	})
 })
