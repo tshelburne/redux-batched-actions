@@ -6,6 +6,9 @@ export declare const BATCH: BatchActionType;
 export interface BatchAction {
   type: BatchActionType;
   payload: Redux.Action[];
+  meta: {
+    batch: true
+  }
 }
 
 export declare function batchActions(actions: Redux.Action[], type?: string): BatchAction;
