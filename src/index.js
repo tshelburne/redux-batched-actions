@@ -1,7 +1,6 @@
-export const BATCH = 'BATCHING_REDUCER.BATCH';
-
-export function batchActions(actions, type = BATCH) {
-	return {type, meta: { batch: true }, payload: actions}
+export function batchActions(actions, type) {
+	const actionsType = actions.reduce((acc, curr, i) =>  acc + (i!== 0 ? ', ' : '') + curr.type, '')
+	return {type: actionsType, meta: { batch: true }, payload: actions}
 }
 
 export function enableBatching(reduce) {
