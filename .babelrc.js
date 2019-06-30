@@ -15,16 +15,6 @@ module.exports = {
           }
         ]
       ]
-    },
-    umd: {
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            modules: 'umd',
-          }
-        ]
-      ]
     }
   }
 };
