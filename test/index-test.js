@@ -10,7 +10,7 @@ describe('batching actions', function() {
 		const action1 = {type: 'ACTION_1'}
 		const action2 = {type: 'ACTION_2'}
 		expect(batchActions([action1, action2])).to.deep.equal({
-			type: 'BATCHING_REDUCER.BATCH',
+			type: 'BATCHING_REDUCER.BATCH: ACTION_1 & ACTION_2',
 			meta: { batch: true },
 			payload: [action1, action2]
 		})

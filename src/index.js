@@ -1,6 +1,13 @@
 export const BATCH = 'BATCHING_REDUCER.BATCH';
 
-export function batchActions(actions, type = BATCH) {
+function combineBatchedActionTypes(actions) {
+	return `${BATCH}: ${actions
+		.map(({ type }) => type)
+		.join(" & ")}`
+}
+
+
+export function batchActions(actions, type = combineBatchedActionTypes(actions)) {
 	return {type, meta: { batch: true }, payload: actions}
 }
 
