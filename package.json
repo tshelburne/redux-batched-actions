@@ -9,10 +9,10 @@
   "scripts": {
     "test": "export BABEL_ENV=cjs && node_modules/.bin/mocha --require @babel/register",
     "clean": "rm -rf lib es dist",
-    "copy:ts": "cp src/index.d.ts lib/index.d.ts",
+    "copy:ts": "cp src/index.d.ts dist/lib/index.d.ts",
     "build:js": "babel src",
-    "build:cjs": "npm run build:js -- --env-name cjs --out-dir lib/",
-    "build:mjs": "npm run build:js -- --env-name mjs --out-dir es/; j2m es/*",
+    "build:cjs": "npm run build:js -- --env-name cjs --out-dir dist/lib/",
+    "build:mjs": "npm run build:js -- --env-name mjs --out-dir dist/es/",
     "build:umd": "npm run build:js -- --env-name dist --out-dir dist/",
     "build": "npm run clean; npm run build:umd && npm run build:cjs && npm run build:mjs && npm run copy:ts",
     "prepublishOnly": "npm run clean && npm run build"
