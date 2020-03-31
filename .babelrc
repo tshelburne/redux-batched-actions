@@ -1,5 +1,33 @@
 {
-  "presets": [
-    "@babel/preset-env"
-  ]
+  "moduleId": "ReduxBatchedActions",
+  "env": {
+    "cjs": {
+      "presets": [
+        "@babel/preset-env"
+      ]
+    },
+    "umd": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "modules": "umd"
+          }
+        ]
+      ]
+    },
+    "mjs": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "targets": {
+              "esmodules": true
+            },
+            "modules": false
+          }
+        ]
+      ]
+    }
+  }
 }
