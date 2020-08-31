@@ -20,7 +20,7 @@ export function batchDispatchMiddleware(store) {
 				dispatchChildActions(store, childAction)
 			})
 		} else {
-			store.dispatch(action)
+			store.dispatch({ ...action, meta: { ...action.meta, unwrappedFromBatch: true }})
 		}
 	}
 
@@ -29,7 +29,9 @@ export function batchDispatchMiddleware(store) {
 			if (action && action.meta && action.meta.batch) {
 				dispatchChildActions(store, action)
 			}
-			return next(action)
+			if (!(action && action.meta && action.meta.unwrappedFromBatch)) {
+				return next(action)
+			}
 		}
 	}
 }

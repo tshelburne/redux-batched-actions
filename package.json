@@ -46,7 +46,8 @@
     "js-to-mjs": "^0.2.0",
     "mocha": "^7.1.1",
     "sinon": "^9.0.1",
-    "sinon-chai": "^3.5.0"
+    "sinon-chai": "^3.5.0",
+    "redux": ">=1.0.0"
   },
   "peerDependencies": {
     "redux": ">=1.0.0"

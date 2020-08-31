@@ -2,6 +2,9 @@ import {batchActions, enableBatching, batchDispatchMiddleware} from '../src';
 import sinon from 'sinon';
 import chai, {expect} from 'chai';
 import sinonChai from 'sinon-chai';
+import { createStore, applyMiddleware } from 'redux';
+import { createMiddlewareSpy, createReducerSpy } from './redux-spy';
+
 chai.use(sinonChai);
 
 describe('batching actions', function() {
@@ -61,7 +64,56 @@ describe('enabling batching', function() {
 
 })
 
-describe('dispatching middleware', function() {
+describe('enableBatching in a real redux store', function () {
+	const action1 = { type: 'ACTION_1' }
+	const action2 = { type: 'ACTION_2' }
+
+	let reduceAction, store;
+	beforeEach(function() {
+		const { reducer, reducerOnRecieveActionSpy } = createReducerSpy()
+		reduceAction = reducerOnRecieveActionSpy
+		store = createStore(enableBatching(reducer))
+	})
+
+	it('reduces each bundled action', function () {
+		const batchedAction = batchActions([action1, action2])
+
+		store.dispatch(batchedAction)
+
+		expect(reduceAction).to.have.been.calledWithExactly(action1)
+		expect(reduceAction).to.have.been.calledWithExactly(action2)
+		expect(reduceAction).to.have.been.calledTwice
+	})
+
+	it('only updates the store once when dispatching a batched action', function () {
+		const batchedAction = batchActions([action1, action2])
+		const onStoreUpdate = sinon.spy()
+		store.subscribe(onStoreUpdate)
+
+		store.dispatch(batchedAction)
+
+		expect(onStoreUpdate).to.have.been.calledOnce
+	})
+
+	it('passes through non-batched actions', function () {
+		store.dispatch(action1)
+
+		expect(reduceAction).to.have.been.calledWithExactly(action1)
+		expect(reduceAction).to.have.been.calledOnce
+	})
+
+	it('updates the store once for each non-batched action', function () {
+		const onStoreUpdate = sinon.spy()
+		store.subscribe(onStoreUpdate)
+
+		store.dispatch(action1)
+		store.dispatch(action2)
+
+		expect(onStoreUpdate).to.have.been.calledTwice
+	})
+})
+
+describe('batch middleware by itself', function() {
 	const action1 = {type: 'ACTION_1'}
 	const action2 = {type: 'ACTION_2'}
 	const store = function () { return { dispatch: sinon.spy() } }
@@ -72,8 +124,9 @@ describe('dispatching middleware', function() {
 		const batchAction = batchActions([action1, action2])
 		batchDispatchMiddleware(s)(next)(batchAction)
 
-		expect(s.dispatch).to.have.been.calledWithExactly(action1)
-		expect(s.dispatch).to.have.been.calledWithExactly(action2)
+		expect(s.dispatch).to.have.been.calledWithMatch(sinon.match(action1))
+		expect(s.dispatch).to.have.been.calledWithMatch(sinon.match(action2))
+		expect(s.dispatch).to.have.been.calledTwice
 	})
 
 	it('calls next only once, on the batchedAction', function() {
@@ -96,8 +149,8 @@ describe('dispatching middleware', function() {
 		batchDispatchMiddleware(s)(next)(batchedAction)
 
 		expect(s.dispatch).to.have.been.calledThrice
-		expect(s.dispatch).to.have.been.calledWithExactly(action1)
-		expect(s.dispatch).to.have.been.calledWithExactly(action2)
+		expect(s.dispatch).to.have.been.calledWithMatch(sinon.match(action1))
+		expect(s.dispatch).to.have.been.calledWithMatch(sinon.match(action2))
 	})
 
 	it('calls next but not dispatch for non-batched actions', function() {
@@ -105,7 +158,124 @@ describe('dispatching middleware', function() {
 		const next = sinon.spy()
 		batchDispatchMiddleware(s)(next)(action1)
 
-		expect(next).to.have.been.calledWithExactly(action1)
+		expect(next).to.have.been.calledWithMatch(sinon.match(action1))
 		expect(s.dispatch).to.not.have.been.called
+	})
+})
+
+describe('batch middleware applied in a real redux store', function () {
+	const action1 = { type: 'ACTION_1' }
+	const action2 = { type: 'ACTION_2' }
+
+	const initialState = null;
+	const doNothingReducer = (state, action) => state
+	
+	it('sends only the batched action to the reducer', function () {
+		const { reducer, reducerOnRecieveActionSpy } = createReducerSpy()
+		const store = createStore(reducer, initialState, applyMiddleware(batchDispatchMiddleware))
+		const batchedAction = batchActions([action1, action2])
+
+		store.dispatch(batchedAction)
+
+		expect(reducerOnRecieveActionSpy).to.have.been.calledWithExactly(batchedAction)
+		expect(reducerOnRecieveActionSpy).to.have.been.calledOnce
+	})
+
+	it('sends only the batched action to the reducer, even with nested actions', function () {
+		const { reducer, reducerOnRecieveActionSpy } = createReducerSpy()
+		const store = createStore(reducer, initialState, applyMiddleware(batchDispatchMiddleware))
+		const batchedAction = batchActions([
+			batchActions([action1, action2]),
+			action2
+		])
+
+		store.dispatch(batchedAction)
+
+		expect(reducerOnRecieveActionSpy).to.have.been.calledWithExactly(batchedAction)
+		expect(reducerOnRecieveActionSpy).to.have.been.calledOnce
+	})
+
+	it('sends non-batched action to reducer', function () {
+		const { reducer, reducerOnRecieveActionSpy } = createReducerSpy()
+		const store = createStore(reducer, initialState, applyMiddleware(batchDispatchMiddleware))
+
+		store.dispatch(action1)
+
+		expect(reducerOnRecieveActionSpy).to.have.been.calledWithExactly(action1)
+		expect(reducerOnRecieveActionSpy).to.have.been.calledOnce
+	})
+
+	it('sends every bundled action to previous middlewares', function () {
+		const { middleware, middlewareOnRecieveActionSpy } = createMiddlewareSpy()
+		const store = createStore(doNothingReducer, initialState, applyMiddleware(middleware, batchDispatchMiddleware))
+		const batchAction = batchActions([action1, action2])
+
+		store.dispatch(batchAction)
+
+		expect(middlewareOnRecieveActionSpy).to.have.been.calledWithExactly(batchAction)
+		expect(middlewareOnRecieveActionSpy).to.have.been.calledWithMatch(sinon.match(action1))
+		expect(middlewareOnRecieveActionSpy).to.have.been.calledWithMatch(sinon.match(action2))
+		expect(middlewareOnRecieveActionSpy).to.have.callCount(3)
+	})
+
+	it('only sends the batch action (not bundled actions) to subsequent middlewares', function () {
+		const { middleware, middlewareOnRecieveActionSpy } = createMiddlewareSpy()
+
+		const store = createStore(doNothingReducer, initialState, applyMiddleware(batchDispatchMiddleware, middleware))
+		const batchAction = batchActions([action1, action2])
+
+		store.dispatch(batchAction)
+
+		expect(middlewareOnRecieveActionSpy).to.have.been.calledWithExactly(batchAction)
+		expect(middlewareOnRecieveActionSpy).to.have.been.calledOnce
+	})
+})
+
+describe('full middleware usage with enableBatching', function () {
+	const action1 = { type: 'ACTION_1' }
+	const action2 = { type: 'ACTION_2' }
+
+	let reduceAction, store;
+	beforeEach(function() {
+		const { reducer, reducerOnRecieveActionSpy } = createReducerSpy()
+		reduceAction = reducerOnRecieveActionSpy
+		store = createStore(enableBatching(reducer), null, applyMiddleware(batchDispatchMiddleware))
+	})
+
+	it('reduces each bundled action', function () {
+		const batchedAction = batchActions([action1, action2])
+
+		store.dispatch(batchedAction)
+
+		expect(reduceAction).to.have.been.calledWithExactly(action1)
+		expect(reduceAction).to.have.been.calledWithExactly(action2)
+		expect(reduceAction).to.have.been.calledTwice
+	})
+
+	it('only updates the store once when dispatching a batched action', function () {
+		const batchedAction = batchActions([action1, action2])
+		const onStoreUpdate = sinon.spy()
+		store.subscribe(onStoreUpdate)
+
+		store.dispatch(batchedAction)
+
+		expect(onStoreUpdate).to.have.been.calledOnce
+	})
+
+	it('passes through non-batched actions', function () {
+		store.dispatch(action1)
+
+		expect(reduceAction).to.have.been.calledWithExactly(action1)
+		expect(reduceAction).to.have.been.calledOnce
+	})
+
+	it('updates the store once for each non-batched action', function () {
+		const onStoreUpdate = sinon.spy()
+		store.subscribe(onStoreUpdate)
+
+		store.dispatch(action1)
+		store.dispatch(action2)
+
+		expect(onStoreUpdate).to.have.been.calledTwice
 	})
 })
