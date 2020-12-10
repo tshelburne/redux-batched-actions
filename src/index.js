@@ -2,11 +2,11 @@ export const BATCH = 'BATCHING_REDUCER.BATCH';
 
 export function batchActions(actions, type) {
 	let typeName = BATCH;
-	if(type === undefined){
+	if(type !== undefined){
 		typeName = type;
 	}
 
-	return {type: type, meta: { batch: true }, payload: actions}
+	return {type: typeName, meta: { batch: true }, payload: actions}
 }
 
 export function enableBatching(reduce) {
