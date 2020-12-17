@@ -8,13 +8,14 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "test": "export BABEL_ENV=cjs && node_modules/.bin/mocha --require @babel/register",
-    "clean": "rm -rf lib es dist",
+    "clean": "rm -rf lib es dist es5",
     "copy:ts": "cp src/index.d.ts lib/index.d.ts",
     "build:js": "babel src",
     "build:cjs": "npm run build:js -- --env-name cjs --out-dir lib/",
     "build:mjs": "npm run build:js -- --env-name mjs --out-dir es/; j2m es/*",
     "build:umd": "npm run build:js -- --env-name dist --out-dir dist/",
-    "build": "npm run clean; npm run build:umd && npm run build:cjs && npm run build:mjs && npm run copy:ts",
+    "build:es5": "tsc --allowJs --target ES5 --outDir es5 src/index.js",
+    "build": "npm run clean; npm run build:umd && npm run build:cjs && npm run build:mjs && npm run build:es5 && npm run copy:ts",
     "prepublishOnly": "npm run clean && npm run build"
   },
   "repository": {
