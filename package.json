@@ -42,6 +42,7 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "@babel/register": "^7.9.0",
+    "babel-cli": "^6.26.0",
     "chai": "^4.2.0",
     "js-to-mjs": "^0.2.0",
     "mocha": "^7.1.1",
@@ -50,5 +51,6 @@
   },
   "peerDependencies": {
     "redux": ">=1.0.0"
-  }
+  },
+  "dependencies": {}
 }
