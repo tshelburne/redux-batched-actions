@@ -14,7 +14,7 @@
     "build:cjs": "npm run build:js -- --env-name cjs --out-dir lib/",
     "build:mjs": "npm run build:js -- --env-name mjs --out-dir es/; j2m es/*",
     "build:umd": "npm run build:js -- --env-name dist --out-dir dist/",
-    "build:es5": "tsc --allowJs --target ES5 --outDir es5 src/index.js",
+    "build:es5": "tsc --allowJs --target ES5 --outDir es5 ./src/index.js",
     "build": "npm run clean; npm run build:umd && npm run build:cjs && npm run build:mjs && npm run build:es5 && npm run copy:ts",
     "prepublishOnly": "npm run clean && npm run build"
   },
